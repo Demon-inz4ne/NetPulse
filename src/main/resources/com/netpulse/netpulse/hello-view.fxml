@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+
+<TabPane prefHeight="750.0" prefWidth="1000.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.netpulse.netpulse.HelloController">
+   <tabs>
+      <Tab closable="false" text="&gt; DASHBOARD">
+         <content>
+            <VBox prefHeight="600.0" prefWidth="900.0" spacing="20.0" style="-fx-background-color: #080E0D;">
+                <padding>
+                    <Insets bottom="40.0" left="40.0" right="40.0" top="40.0" />
+                </padding>
+            
+                <Label alignment="TOP_LEFT" text="&gt; NETPULSE_" textFill="#00ff88">
+                  <font>
+                     <Font name="Consolas Bold" size="36.0" />
+                  </font>
+               </Label>
+               <Label text="NETWORK DIAGNOSTICS TERMINAL // v1.0" textFill="#8ca99a">
+                  <font>
+                     <Font name="Consolas" size="14.0" />
+                  </font>
+               </Label>
+                <Button fx:id="checkIpButton" onAction="#handleIpLookup" prefHeight="42.0" prefWidth="180.0" style="-fx-background-color: #10271D; -fx-border-color: #00FF88; -fx-border-radius: 6; -fx-background-radius: 6; -fx-cursor: hand;" text="&gt; CHECK MY IP" textFill="#00ff88">
+                  <font>
+                     <Font name="Consolas Bold" size="14.0" />
+                  </font>
+               </Button>
+               <VBox prefHeight="120.0" prefWidth="720.0" spacing="12.0" style="-fx-background-color: #101A17; -fx-border-color: #24513B;">
+                  <padding>
+                     <Insets bottom="18.0" left="18.0" right="18.0" top="18.0" />
+                  </padding>
+                  <children>
+                     <Label text="&gt; PUBLIC IP INFORMATION" textFill="#00ff88">
+                        <font>
+                           <Font name="System Bold" size="15.0" />
+                        </font>
+                     </Label>
+                     <Label fx:id="ipAddressLabel" text="IP ADDRESS: Not detected" textFill="WHITE">
+                        <font>
+                           <Font size="13.0" />
+                        </font>
+                     </Label>
+                     <Label fx:id="locationLabel" text="LOCATION / ISP: Awaiting lookup..." textFill="#8ca99a">
+                        <font>
+                           <Font size="13.0" />
+                        </font>
+                     </Label>
+                  </children>
+               </VBox>
+               <VBox prefHeight="110.0" prefWidth="780.0" spacing="12.0" style="-fx-background-color: #101A17; -fx-border-color: #24513B;">
+                  <padding>
+                     <Insets bottom="18.0" left="18.0" right="18.0" top="18.0" />
+                  </padding>
+                  <children>
+                     <Label text="&gt; PING TEST" textFill="#00ff88">
+                        <font>
+                           <Font name="System Bold" size="15.0" />
+                        </font>
+                     </Label>
+                     <Label fx:id="pingLabel" text="LATENCY: -- ms" textFill="WHITE">
+                        <font>
+                           <Font size="13.0" />
+                        </font>
+                     </Label>
+                     <Button fx:id="pingButton" mnemonicParsing="false" onAction="#handlePingTest" style="-fx-background-color: #325746;" text="RUN PING TEST" textFill="#00ff88">
+                        <font>
+                           <Font name="System Bold" size="14.0" />
+                        </font>
+                     </Button>
+                  </children>
+               </VBox>
+               <VBox prefHeight="90.0" prefWidth="780.0" spacing="10.0" style="-fx-background-color: #101A17; -fx-border-color: #24513B;">
+                  <padding>
+                     <Insets bottom="18.0" left="18.0" right="18.0" top="18.0" />
+                  </padding>
+                  <children>
+                     <Label text="&gt; CONNECTION STATUS" textFill="#00ff88">
+                        <font>
+                           <Font name="System Bold" size="15.0" />
+                        </font>
+                     </Label>
+                     <Label fx:id="statusLabel" text="● STATUS: NOT CHECKED" textFill="#838383">
+                        <font>
+                           <Font size="13.0" />
+                        </font>
+                     </Label>
+                  </children>
+               </VBox>
+            </VBox>
+         </content>
+      </Tab>
+      <Tab closable="false" text="&gt; SPEED TEST">
+        <content>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: #080E0D;">
+               <children>
+                  <VBox alignment="TOP_CENTER" prefHeight="610.0" prefWidth="900.0" spacing="20.0" style="-fx-background-color: #080E0D;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <padding>
+                        <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
+                     </padding>
+                     <children>
+                        <Label style="-fx-text-fill: #22D3EE; -fx-font-family: 'Consolas'; -fx-font-size: 30px; -fx-font-weight: bold;" text="&gt; SPEED TEST_" />
+                        <Label style="-fx-text-fill: #8CA99A; -fx-font-family: 'Consolas'; -fx-font-size: 13px;" text="BANDWIDTH PERFORMANCE ANALYSIS // v2.0" />
+                        <HBox alignment="CENTER" prefHeight="320.0" prefWidth="940.0" spacing="20.0">
+                           <children>
+                              <StackPane fx:id="downloadGaugeContainer" minHeight="320.0" prefHeight="320.0" prefWidth="380.0" style="-fx-background-color: #10151C; -fx-border-color: #22D3EE; -fx-border-radius: 10; -fx-background-radius: 10;" />
+                              <StackPane fx:id="uploadGaugeContainer" minHeight="320.0" prefHeight="320.0" prefWidth="380.0" style="-fx-background-color: #10151C; -fx-border-color: #A78BFA; -fx-border-radius: 10; -fx-background-radius: 10;" />
+                           </children>
+                        </HBox>
+                        <Button fx:id="startSpeedTestButton" mnemonicParsing="false" onAction="#handleSpeedTest" prefHeight="45.0" prefWidth="240.0" style="-fx-background-color: #13212B; -fx-border-color: #22D3EE; -fx-border-radius: 8; -fx-background-radius: 8; -fx-font-family: 'Consolas'; -fx-font-size: 14px; -fx-font-weight: bold; -fx-cursor: hand;" text="▶ START SPEED TEST" textFill="#22d3ee" />
+                        <Label fx:id="speedStatusLabel" style="-fx-text-fill: #8CA99A; -fx-font-family: 'Consolas'; -fx-font-size: 12px;" text="SYSTEM READY // AWAITING SPEED TEST" />
+                     </children>
+                  </VBox>
+               </children>
+            </AnchorPane>
+        </content>
+      </Tab>
+   </tabs>
+</TabPane>
