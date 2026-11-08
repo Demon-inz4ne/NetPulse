@@ -134,8 +134,9 @@ public class SpeedGauge extends Region {
     }
 
     public void setSpeed(double newSpeed) {
-        if (animation != null) {
-            animation.stop();
+
+        if (!Double.isFinite(newSpeed)) {
+            return;
         }
 
         newSpeed = Math.max(0, newSpeed);
@@ -144,13 +145,22 @@ public class SpeedGauge extends Region {
             maxSpeed = Math.ceil(newSpeed / 100.0) * 100;
         }
 
+        if (animation != null) {
+            animation.stop();
+        }
+
+        if (Math.abs(speed.get() - newSpeed) < 0.01) {
+            speed.set(newSpeed);
+            return;
+        }
+
         animation = new Timeline(
                 new KeyFrame(
-                        Duration.millis(700),
+                        Duration.millis(250),
                         new KeyValue(
                                 speed,
                                 newSpeed,
-                                Interpolator.EASE_BOTH
+                                Interpolator.EASE_OUT
                         )
                 )
         );
