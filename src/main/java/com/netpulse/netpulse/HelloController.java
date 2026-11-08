@@ -218,8 +218,9 @@ public class HelloController {
             } catch (Exception error) {
                 Platform.runLater(() -> {
                     speedStatusLabel.setText(
-                            "TEST FAILED // " + error.getMessage()
+                            "TEST FAILED // Check connection and try again"
                     );
+
                     startSpeedTestButton.setDisable(false);
                 });
             }
