@@ -115,12 +115,16 @@ public class SpeedTestService {
                 "Content-Type", "application/octet-stream"
         );
 
-        long startTime = System.nanoTime();
-        long lastUpdate = startTime;
+        long startTime;
+        long lastUpdate;
         long totalBytes = 0;
+        long uploadEndTime;
 
         try {
             connection.connect();
+
+            startTime = System.nanoTime();
+            lastUpdate = startTime;
 
             try (var output = connection.getOutputStream()) {
                 int offset = 0;
@@ -153,6 +157,9 @@ public class SpeedTestService {
                         lastUpdate = now;
                     }
                 }
+                uploadEndTime = System.nanoTime();
+
+                int status = connection.getResponseCode();
             }
 
             int status = connection.getResponseCode();
@@ -164,7 +171,7 @@ public class SpeedTestService {
             }
 
             double seconds =
-                    (System.nanoTime() - startTime)
+                    (uploadEndTime - startTime)
                             / 1_000_000_000.0;
 
             double finalMbps =
