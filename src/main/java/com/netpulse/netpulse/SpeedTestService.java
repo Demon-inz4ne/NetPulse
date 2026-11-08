@@ -27,8 +27,8 @@ public class SpeedTestService {
         );
 
         long totalBytes = 0;
-        long startTime = System.nanoTime();
-        long lastUpdate = startTime;
+        long startTime;
+        long lastUpdate;
 
         try {
             int status = connection.getResponseCode();
@@ -40,6 +40,9 @@ public class SpeedTestService {
             }
 
             try (InputStream input = connection.getInputStream()) {
+                startTime = System.nanoTime();
+                lastUpdate = startTime;
+
                 byte[] buffer = new byte[8192];
                 int bytesRead;
 
