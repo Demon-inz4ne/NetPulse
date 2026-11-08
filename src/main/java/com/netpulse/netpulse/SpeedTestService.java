@@ -113,6 +113,7 @@ public class SpeedTestService {
         );
 
         long startTime = System.nanoTime();
+        long lastUpdate = startTime;
         long totalBytes = 0;
 
         try {
@@ -132,16 +133,21 @@ public class SpeedTestService {
                     offset += length;
                     totalBytes += length;
 
-                    double elapsed =
-                            (System.nanoTime() - startTime)
-                                    / 1_000_000_000.0;
+                    long now = System.nanoTime();
 
-                    if (elapsed > 0) {
-                        double mbps =
-                                (totalBytes * 8.0)
-                                        / elapsed / 1_000_000.0;
+                    if (now - lastUpdate >= 200_000_000L) {
+                        double elapsed =
+                                (now - startTime) / 1_000_000_000.0;
 
-                        onProgress.accept(mbps);
+                        if (elapsed > 0) {
+                            double mbps =
+                                    (totalBytes * 8.0)
+                                            / elapsed / 1_000_000.0;
+
+                            onProgress.accept(mbps);
+                        }
+
+                        lastUpdate = now;
                     }
                 }
             }
