@@ -27,8 +27,8 @@ public class SpeedTestService {
         );
 
         long totalBytes = 0;
-        long startTime = System.nanoTime();
-        long lastUpdate = startTime;
+        long startTime;
+        long lastUpdate;
 
         try {
             int status = connection.getResponseCode();
@@ -40,6 +40,9 @@ public class SpeedTestService {
             }
 
             try (InputStream input = connection.getInputStream()) {
+                startTime = System.nanoTime();
+                lastUpdate = startTime;
+
                 byte[] buffer = new byte[8192];
                 int bytesRead;
 
@@ -112,11 +115,16 @@ public class SpeedTestService {
                 "Content-Type", "application/octet-stream"
         );
 
-        long startTime = System.nanoTime();
+        long startTime;
+        long lastUpdate;
         long totalBytes = 0;
+        long uploadEndTime;
 
         try {
             connection.connect();
+
+            startTime = System.nanoTime();
+            lastUpdate = startTime;
 
             try (var output = connection.getOutputStream()) {
                 int offset = 0;
@@ -132,18 +140,26 @@ public class SpeedTestService {
                     offset += length;
                     totalBytes += length;
 
-                    double elapsed =
-                            (System.nanoTime() - startTime)
-                                    / 1_000_000_000.0;
+                    long now = System.nanoTime();
 
-                    if (elapsed > 0) {
-                        double mbps =
-                                (totalBytes * 8.0)
-                                        / elapsed / 1_000_000.0;
+                    if (now - lastUpdate >= 200_000_000L) {
+                        double elapsed =
+                                (now - startTime) / 1_000_000_000.0;
 
-                        onProgress.accept(mbps);
+                        if (elapsed > 0) {
+                            double mbps =
+                                    (totalBytes * 8.0)
+                                            / elapsed / 1_000_000.0;
+
+                            onProgress.accept(mbps);
+                        }
+
+                        lastUpdate = now;
                     }
                 }
+                uploadEndTime = System.nanoTime();
+
+                int status = connection.getResponseCode();
             }
 
             int status = connection.getResponseCode();
@@ -155,7 +171,7 @@ public class SpeedTestService {
             }
 
             double seconds =
-                    (System.nanoTime() - startTime)
+                    (uploadEndTime - startTime)
                             / 1_000_000_000.0;
 
             double finalMbps =

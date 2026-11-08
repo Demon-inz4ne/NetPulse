@@ -11,8 +11,8 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 
@@ -55,40 +55,45 @@ public class HelloController {
                             return;
                         }
 
-                        String json = response.body();
+                        try {
+                            JsonObject json = JsonParser.parseString(response.body())
+                                    .getAsJsonObject();
 
-                        if (!json.matches(
-                                "(?s).*\"success\"\\s*:\\s*true.*")) {
+                            if (!json.has("success")
+                                    || !json.get("success").getAsBoolean()) {
+                                showError();
+                                return;
+                            }
+
+                            String ip = getValue(json, "ip");
+                            String country = getValue(json, "country");
+                            String city = getValue(json, "city");
+
+                            ipAddressLabel.setText("IP ADDRESS: " + ip);
+
+                            locationLabel.setText(
+                                    "LOCATION: " + city + ", " + country
+                            );
+
+                            statusLabel.setText("● STATUS: ONLINE");
+
+                        } catch (Exception e) {
                             showError();
-                            return;
                         }
-
-                        String ip = getValue(json, "ip");
-                        String country = getValue(json, "country");
-                        String city = getValue(json, "city");
-
-                        ipAddressLabel.setText(
-                                "IP ADDRESS: " + ip);
-
-                        locationLabel.setText(
-                                "LOCATION: " + city + ", " + country);
-
-                        statusLabel.setText(
-                                "● STATUS: ONLINE");
                     });
                 });
     }
 
-    private String getValue(String json, String key) {
-        Pattern pattern = Pattern.compile(
-                "\"" + Pattern.quote(key)
-                        + "\"\\s*:\\s*\"([^\"]*)\"");
+    private String getValue(JsonObject json, String key) {
+        if (!json.has(key) || json.get(key).isJsonNull()) {
+            return "Unknown";
+        }
 
-        Matcher matcher = pattern.matcher(json);
-
-        return matcher.find()
-                ? matcher.group(1)
-                : "Unknown";
+        try {
+            return json.get(key).getAsString();
+        } catch (Exception e) {
+            return "Unknown";
+        }
     }
 
     private void showError() {
@@ -213,8 +218,9 @@ public class HelloController {
             } catch (Exception error) {
                 Platform.runLater(() -> {
                     speedStatusLabel.setText(
-                            "TEST FAILED // " + error.getMessage()
+                            "TEST FAILED // Check connection and try again"
                     );
+
                     startSpeedTestButton.setDisable(false);
                 });
             }
